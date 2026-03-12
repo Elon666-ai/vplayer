@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMXPlayer (Simulcast Control)</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        
+        #controls { background: #333; padding: 15px; display: flex; gap: 12px; align-items: center; border-bottom: 1px solid #444; }
+        #urlBlock { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 360px; }
+        .input-row { display: flex; align-items: center; gap: 8px; }
+        .input-row label { min-width: 100px; }
+        input[type="text"] { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: #fff; font-size: 14px; }
+        
+        select { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: #fff; font-size: 14px; min-width: 150px; }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        button { padding: 8px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        #startBtn { background: #28a745; color: white; }
+        #startBtn:hover { background: #218838; }
+        #exitBtn { background: #dc3545; color: white; }
+        #exitBtn:hover { background: #c82333; }
+        #pauseBtn { background: #5253aa; color: white; }
+        #pauseBtn:hover { background: #5253aa; }
+
+        #main-area { flex: 1; display: flex; position: relative; overflow: hidden; }
+        #video-container { flex: 1; display: flex; justify-content: center; align-items: center; background: #000; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        #stats { 
+            position: absolute; top: 10px; right: 10px; width: 320px; max-height: calc(100% - 20px); 
+            background: rgba(0,0,0,0.85); border: 1px solid #444; padding: 10px; 
+            border-radius: 6px; overflow-y: auto; font-size: 13px; font-family: monospace;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); pointer-events: none;
+        }
+        .stat-group { margin-bottom: 15px; }
+        .stat-title { color: #00bcd4; font-weight: bold; border-bottom: 1px dashed #555; margin-bottom: 5px; padding-bottom: 3px; }
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .stat-key { color: #aaa; }
+        .stat-val { color: #fff; font-weight: bold; }
+        .stat-val.good { color: #28a745; }
+        .stat-val.warn { color: #ffc107; }
+        .stat-val.bad { color: #dc3545; }
+        
+        .ws-status { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; background: #555; }
+        .ws-connected { background: #28a745; box-shadow: 0 0 5px #28a745; }
+        .ws-disconnected { background: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div id="controls">
+    <div id="urlBlock">
+        <div class="input-row">
+            <label for="vcenterInput">vcenter HTTP:</label>
+            <input type="text" id="vcenterInput" value="http://localhost:8090" placeholder="Enter vcenter HTTP URL">
+        </div>
+        <div class="input-row">
+            <label for="urlInput">appId/stream:</label>
+            <input type="text" id="urlInput" value="appbd4cd2aa7be8/simulcast-fwv" placeholder="live/your-stream or http://host/app/stream/whep">
+        </div>
+        <div class="input-row">
+            <label for="emailInput">Register E-mail:</label>
+            <input type="text" id="emailInput" value="" placeholder="you@example.com">
+            <button id="registerBtn" type="button">Register</button>
+        </div>
+        <div class="input-row">
+            <label for="appSecretInput">App Secret:</label>
+            <input type="text" id="appSecretInput" value="8445cc80cb9375385cc16c3e98dfe952" placeholder="Paste appSecret from e-mail">
+        </div>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 5px; margin-left: 10px;">
+        <span id="wsStatus" class="ws-status" title="Signaling Status"></span>
+        <label for="layerSelect">Quality:</label>
+        <select id="layerSelect" disabled>
+            <option value="-1">Auto (Waiting WS...)</option>
+        </select>
+    </div>
+
+    <button id="startBtn">Start</button>
+    <button id="exitBtn">Exit</button>
+    <button id="pauseBtn">Pause</button>
+</div>
+
+<div id="main-area">
+    <div id="video-container">
+        <video id="video" autoplay playsinline muted controls></video>
+    </div>
+    <div id="stats">
+        <div style="color: #888; text-align: center;">Waiting for stream...</div>
+    </div>
+</div>
+
+<!-- 先加载sdk库，再加载业务逻辑 -->
+<script src="./sdk/mmxplayer-v1.0.1.js?v=20260311b"></script>
+<script src="./sdk/abr-engine.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
