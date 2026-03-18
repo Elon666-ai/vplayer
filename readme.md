@@ -253,3 +253,8 @@ http://localhost:8081/index.html?vcenterWs=ws://localhost:8080/ws/play&vcenterHt
   "lagDuration": 235
 }
 ```
+
+# ppcdn-demo
+**demo-player**: http://8.220.177.159:8080/vplayer/
+**admin-portal**: http://8.220.177.159:8090
+**recordings**: http://8.220.177.159/mmx/
